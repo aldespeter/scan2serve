@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Royal Dining | Scan2Order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel = "stylesheet" href="style.css"/>
+  
+</head>
+<body>
+
+  <!-- SETUP SCREEN -->
+  <div class="setup-screen" id="setupScreen">
+    <div class="setup-logo">
+      <h1>Royal Dining</h1>
+      <p>Fine Cuisine Experience</p>
+    </div>
+    <div class="setup-card">
+      <h2>Welcome to Your Table</h2>
+      <div class="form-group">
+        <label for="tableSelect">Select Table Number</label>
+        <select id="tableSelect">
+          <option value="">Choose your table...</option>
+          <option value="1">Table 1 - Window View</option>
+          <option value="2">Table 2 - Garden Side</option>
+          <option value="3">Table 3 - Private Alcove</option>
+          <option value="4">Table 4 - Main Hall</option>
+          <option value="5">Table 5 - Terrace</option>
+          <option value="6">Table 6 - Chandelier</option>
+          <option value="7">Table 7 - Fireplace</option>
+          <option value="8">Table 8 - Royal Suite</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="guestSelect">Number of Guests</label>
+        <select id="guestSelect">
+          <option value="">How many guests...</option>
+          <option value="1">1 Guest</option>
+          <option value="2">2 Guests</option>
+          <option value="3">3 Guests</option>
+          <option value="4">4 Guests</option>
+          <option value="5">5 Guests</option>
+          <option value="6">6 Guests</option>
+          <option value="7">7 Guests</option>
+          <option value="8">8 Guests</option>
+        </select>
+      </div>
+      <button class="btn-royal" id="continueBtn">Begin Dining Experience</button>
+    </div>
+  </div>
+  
+
+  <!-- MAIN APP -->
+  <div class="main-app" id="mainApp">
+    <!-- Header -->
+    <header class="app-header">
+      <h1>Royal Dining</h1>
+      <div class="table-info">
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Table <span id="displayTable">-</span>
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          <span id="displayGuests">-</span> Guests
+        </span>
+      </div>
+    </header>
+
+    <!-- Mobile Table View -->
+    <div class="mobile-table-view" id="mobileTableView">
+      <div class="mobile-table-scroll" id="mobileTableScroll">
+        <div class="mobile-empty">Your table awaits your selections</div>
+      </div>
+    </div>
+
+    <!-- Desktop Table Visualization -->
+    <section class="table-section" id="tableSection">
+      <div class="table-label">Your Royal Table</div>
+      <div class="table-container">
+        <div class="dining-table round" id="diningTable">
+          <div class="table-edge"></div>
+          <div class="table-surface">
+            <div class="wood-texture"></div>
+            <div class="table-cloth"></div>
+            <div class="centerpiece"></div>
+          </div>
+          <div class="table-dishes" id="tableDishes"></div>
+          <div class="chairs-container chairs-round" id="chairsContainer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section">
+      <!-- Search & Filters -->
+      <div class="search-filters">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="searchInput" placeholder="Search our royal menu...">
+        </div>
+        <div class="filter-row">
+          <label class="filter-toggle veg">
+            <input type="checkbox" id="vegFilter" checked>
+            <span class="toggle-box">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </span>
+            <span>Vegetarian</span>
+          </label>
+          <label class="filter-toggle nonveg">
+            <input type="checkbox" id="nonvegFilter" checked>
+            <span class="toggle-box">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </span>
+            <span>Non-Vegetarian</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="category-tabs" id="categoryTabs">
+        <button class="category-tab active" data-category="all">All Dishes</button>
+        <button class="category-tab" data-category="starters">Starters</button>
+        <button class="category-tab" data-category="main">Main Course</button>
+        <button class="category-tab" data-category="drinks">Beverages</button>
+        <button class="category-tab" data-category="desserts">Desserts</button>
+      </div>
+
+      <!-- Menu Grid -->
+      <div class="menu-grid" id="menuGrid"></div>
+    </section>
+
+    <!-- Floating Summary -->
+    <div class="floating-summary" id="floatingSummary">
+      <div class="summary-info">
+        <span class="summary-items"><span id="totalItems">0</span> items on table</span>
+        <span class="summary-total">₹<span id="totalPrice">0</span></span>
+      </div>
+      <button class="btn-view-table" id="btnViewTable">View Order</button>
+    </div>
+  </div>
+
+  <!-- ORDER REVIEW PANEL -->
+  <div class="panel-overlay" id="panelOverlay"></div>
+  <div class="order-panel" id="orderPanel">
+    <div class="panel-header">
+      <div>
+        <h2>Your Order</h2>
+        <div class="table-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Table <span id="panelTableNum">-</span> • <span id="panelGuestNum">-</span> Guests
+        </div>
+      </div>
+      <button class="btn-close-panel" id="btnClosePanel">×</button>
+    </div>
+
+    <div class="panel-content">
+      <!-- Order Review View -->
+      <div class="order-review-view" id="orderReviewView">
+        <div class="panel-empty" id="panelEmpty">
+          <svg viewBox="0 0 24 24"><path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.20-1.10-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"/></svg>
+          <h3>Your Table is Empty</h3>
+          <p>Add delicious dishes from our royal menu</p>
+        </div>
+
+        <div class="order-items-list" id="orderItemsList"></div>
+
+        <div class="order-summary" id="orderSummary" style="display: none;">
+          <div class="order-summary-row">
+            <span>Subtotal</span>
+            <span>₹<span id="panelSubtotal">0</span></span>
+          </div>
+          <div class="order-summary-row">
+            <span>Taxes & Charges</span>
+            <span>₹<span id="panelTax">0</span></span>
+          </div>
+          <div class="order-summary-row total">
+            <span>Total</span>
+            <span>₹<span id="panelTotal">0</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Status View -->
+      <div class="order-status-view" id="orderStatusView">
+        <div class="order-confirmation" id="orderConfirmation">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <h3>Order Placed Successfully!</h3>
+          <p>Your order has been sent to our royal kitchen</p>
+        </div>
+
+        <div class="progress-stepper">
+          <h4 class="stepper-title">Order Progress</h4>
+          <div class="stepper-steps" id="stepperSteps">
+            <div class="stepper-step" data-step="placed">
+              <div class="stepper-step-content">
+                <h4>Order Placed</h4>
+                <p>Your order has been received</p>
+              </div>
+            </div>
+            <div class="stepper-step" data-step="kitchen">
+              <div class="stepper-step-content">
+                <h4>Sent to Kitchen</h4>
+                <p>Our chefs have received your order</p>
+              </div>
+            </div>
+            <div class="stepper-step" data-step="preparing">
+              <div class="stepper-step-content">
+                <h4>Preparing</h4>
+                <p>Your dishes are being prepared</p>
+              </div>
+            </div>
+            <div class="stepper-step" data-step="ready">
+              <div class="stepper-step-content">
+                <h4>Ready</h4>
+                <p>Your order is ready to serve</p>
+              </div>
+            </div>
+            <div class="stepper-step" data-step="served">
+              <div class="stepper-step-content">
+                <h4>Served</h4>
+                <p>Enjoy your royal meal!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-items-list" id="statusItemsList"></div>
+      </div>
+    </div>
+
+    <div class="panel-footer" id="panelFooter">
+      <button class="btn-add-more" id="btnAddMore">Add More Items</button>
+      <button class="btn-place-order" id="btnPlaceOrder">Place Order</button>
+    </div>
+  </div>
+<script type="module" src="app.js"></script>
+<script type="module" src="firebase.js"></script>
+</body>
+</html>

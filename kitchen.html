@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Royal Kitchen | Order Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #c9a961;
+      --dark: #1a1a1a;
+      --bg: #f4f4f4;
+      --white: #ffffff;
+    }
+    body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+    header { background: var(--dark); color: var(--gold); padding: 20px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .orders-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    
+    .order-card { background: var(--white); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--gold); }
+    .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+    .table-num { font-weight: 600; font-size: 1.2rem; color: var(--dark); }
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
+    
+    /* Status Colors */
+    .status-placed { background: #ffeaa7; color: #d63031; }
+    .status-preparing { background: #81ecec; color: #0984e3; }
+    .status-ready { background: #55efc4; color: #00b894; }
+
+    .item-list { list-style: none; padding: 0; }
+    .item-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; }
+    .item-qty { background: var(--gold); color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+    
+    .controls { margin-top: 15px; display: flex; gap: 10px; }
+    button { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+    .btn-next { background: var(--dark); color: var(--gold); }
+    .btn-next:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Royal Kitchen Display</h1>
+    <div id="connection-status">Live Connection Active</div>
+  </header>
+
+  <div class="orders-container" id="ordersGrid">
+    </div>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { collection, query, onSnapshot, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Map IDs to Names (In a real app, you'd fetch this from menuData)
+    const dishNames = {
+        1: "Paneer Tikka Royale", 2: "Lucknowi Galouti Kebab", 3: "Crispy Okra Fries", 
+        7: "Butter Chicken", 8: "Dal Makhani", 13: "Lamb Biryani" // Add more as per app.js
+    };
+
+    const ordersGrid = document.getElementById('ordersGrid');
+    const orderSteps = ['preparing', 'ready', 'served'];
+
+    // Listen to Firestore for updates
+    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+    
+    onSnapshot(q, (snapshot) => {
+      ordersGrid.innerHTML = '';
+      snapshot.forEach((doc) => {
+        const order = doc.data();
+        if(order.status === 'served') return; // Don't show completed orders
+
+        const card = document.createElement('div');
+        card.className = 'order-card';
+        
+        let itemsHtml = '';
+        for (const [id, qty] of Object.entries(order.items)) {
+            itemsHtml += `<li><span>${dishNames[id] || 'Dish #'+id}</span> <span class="item-qty">x${qty}</span></li>`;
+        }
+
+        card.innerHTML = `
+          <div class="order-header">
+            <span class="table-num">TABLE ${order.table}</span>
+            <span class="status-badge status-${order.status}">${order.status}</span>
+          </div>
+          <ul class="item-list">${itemsHtml}</ul>
+          <div class="controls">
+            <button class="btn-next" onclick="updateStatus('${doc.id}', '${order.status}')">
+                Advance to Next Stage
+            </button>
+          </div>
+        `;
+        ordersGrid.appendChild(card);
+      });
+    });
+
+    // Global function to update status
+    window.updateStatus = async (id, currentStatus) => {
+        const currentIndex = orderSteps.indexOf(currentStatus);
+        if (currentIndex < orderSteps.length - 1) {
+            const nextStatus = orderSteps[currentIndex + 1];
+            const orderRef = doc(db, "orders", id);
+            await updateDoc(orderRef, { status: nextStatus });
+        }
+    };
+  </script>
+</body>
+</html>
